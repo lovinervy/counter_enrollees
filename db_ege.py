@@ -11,6 +11,8 @@ class parsing_exams():
         self.COMPLETE_USER_EXAMS()
         self.CREATE_ID()
         self.PARSING_EXAM()
+        self.FILTERING_EXAMS()
+        #self.INSERT_INTO_DB_EXAMS()
 
 
     def CREATE_DB_EXAMS(self):
@@ -36,7 +38,6 @@ class parsing_exams():
             cur = con.cursor()
             cur.execute('SELECT * FROM exams')
             self.result = cur.fetchall()
-            print(self.result)
         except sql.Error as s:
             print(f'Error: {s}')
         finally:
@@ -117,11 +118,32 @@ class parsing_exams():
                     MAS.append(0)
                 
                 FINAL_MAS.append(MAS)
+        self.COMPLETED_EXAM = FINAL_MAS
         print(FINAL_MAS[33])
         print(FINAL_MAS[34])
         print(FINAL_MAS[35])
         print(FINAL_MAS[36])
+    
 
+    def FILTERING_EXAMS(self):
+        self.FILTERED_EXAMS = []
+        for bd in self.COMPLETED_EXAM:
+            if bd not in self.result:
+                self.FILTERED_EXAMS.append(bd)
+        print(self.result)
+    
+    def INSERT_INTO_DB_EXAMS(self):
+        try:
+            con = sql.connect('DATABASE.db')
+            cur = con.cursor()
+            for exam in self.FILTERED_EXAMS:
+                cur.execute('INSERT INTO exams VALUES(?, ?, ?, ?)', exam)
+            con.commit()
+        except sql.Error as s:
+            print(f'Error: {s}')
+        finally:
+            cur.close()
+            con.close()
 
 
 if __name__ == "__main__":

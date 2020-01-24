@@ -136,12 +136,6 @@ class parsing_exams():
         except sql.Error as s:
             print(f'Error: {s}')
         finally:
-            cur.close()
-            con.close()
-
-
-if __name__ == "__main__":
-    workbook = xlrd.open_workbook('123.xls', encoding_override='utf-8')
-    worksheet = workbook.sheet_by_index(0)
-    parsing_exams(worksheet)
-    #hw.main()
+            if con:
+                cur.close()
+                con.close()

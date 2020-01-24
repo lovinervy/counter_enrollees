@@ -12,7 +12,7 @@ class parsing_exams():
         self.CREATE_ID()
         self.PARSING_EXAM()
         self.FILTERING_EXAMS()
-        #self.INSERT_INTO_DB_EXAMS()
+        self.INSERT_INTO_DB_EXAMS()
 
 
     def CREATE_DB_EXAMS(self):
@@ -20,8 +20,8 @@ class parsing_exams():
             con = sql.connect('DATABASE.db')
             cur = con.cursor()
             cur.execute('CREATE TABLE IF NOT EXISTS exams(КОД INT,'
-                                                        'ТИП_ЭКЗАМЕНА TEXT,'
                                                         'ЭКЗАМЕН TEXT,'
+                                                        'ТИП_ЭКЗАМЕНА TEXT,'
                                                         'БАЛЛ INT)')
             print("Done create exams")       
         except sql.Error as s:
@@ -57,7 +57,6 @@ class parsing_exams():
                     self.count_ege = c
                 elif j == 'Предметы (ЕГЭ)':
                     self.count_dir_ege = c
-        print('Hello')
 
     
     def COMPLETE_USER_EXAMS(self):
@@ -70,7 +69,6 @@ class parsing_exams():
             USER_EXAMS.append(row_values[self.count_ege])
             EXAMS.append(USER_EXAMS)
         self.ALL_EXAMS = EXAMS
-        print(self.ALL_EXAMS[11])
 
     
     def CREATE_ID(self):
@@ -87,8 +85,7 @@ class parsing_exams():
             elif user_id[0] == '227':
                 user_id = int('3' + user_id[1])
                 self.ALL_EXAMS[num].pop(0)
-                self.ALL_EXAMS[num].insert(0, user_id)
-        print(self.ALL_EXAMS[11])            
+                self.ALL_EXAMS[num].insert(0, user_id)          
     
 
     def PARSING_EXAM(self):
@@ -119,18 +116,15 @@ class parsing_exams():
                 
                 FINAL_MAS.append(MAS)
         self.COMPLETED_EXAM = FINAL_MAS
-        print(FINAL_MAS[33])
-        print(FINAL_MAS[34])
-        print(FINAL_MAS[35])
-        print(FINAL_MAS[36])
     
 
     def FILTERING_EXAMS(self):
         self.FILTERED_EXAMS = []
         for bd in self.COMPLETED_EXAM:
-            if bd not in self.result:
-                self.FILTERED_EXAMS.append(bd)
-        print(self.result)
+            if tuple(bd) not in self.result:
+                if bd not in self.FILTERED_EXAMS:
+                    self.FILTERED_EXAMS.append(bd)
+
     
     def INSERT_INTO_DB_EXAMS(self):
         try:
